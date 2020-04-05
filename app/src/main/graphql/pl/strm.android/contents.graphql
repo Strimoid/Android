@@ -1,0 +1,11 @@
+query ContentsQuery {
+    contents {
+        id
+        title
+        thumbnail
+        description
+        user {
+            name
+        }
+    }
+}

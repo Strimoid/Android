@@ -1,0 +1,12 @@
+{
+  "name": "Strm API",
+  "schemaPath": "schema.json",
+  "extensions": {
+    "endpoints": {
+      "Production": {
+        "url": "https://new.strm.pl/api",
+        "introspect": false
+      }
+    }
+  }
+}

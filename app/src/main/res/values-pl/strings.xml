@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Strm</string>
+    <string name="title_contents">Treści</string>
+    <string name="title_entries">Wpisy</string>
+    <string name="title_notifications">Powiadomienia</string>
+</resources>

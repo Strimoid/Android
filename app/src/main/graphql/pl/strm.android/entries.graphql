@@ -1,0 +1,12 @@
+query EntriesQuery {
+    entries {
+        id
+        text
+        user {
+            avatar
+            name
+        }
+        uv
+        dv
+    }
+}
