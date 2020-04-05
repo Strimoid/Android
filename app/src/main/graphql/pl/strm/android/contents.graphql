@@ -6,6 +6,10 @@ query ContentsQuery($cursor: String) {
         thumbnail
         description
         url
+        commentsCount
+        group {
+            name
+        }
         user {
             name
         }

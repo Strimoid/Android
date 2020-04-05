@@ -29,6 +29,8 @@ class ContentListAdapter() : PagedListAdapter<Content, ViewHolder>(DiffCallback)
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = getItem(position) as Content
         holder.titleView.text = item.title
+        holder.groupName.text = "g/${item.group?.name}"
+        holder.commentsCount.text = "${item.commentsCount} comments"
 
         if (item.thumbnail !== null) {
             Glide.with(holder.titleView)
@@ -58,6 +60,8 @@ class ContentListAdapter() : PagedListAdapter<Content, ViewHolder>(DiffCallback)
         val titleView: TextView = view.title
         val descriptionView: TextView = view.description
         val thumbnailView: ImageView = view.thumbnail
+        val groupName: TextView = view.groupName
+        val commentsCount: TextView = view.commentsCount
 
         override fun toString(): String {
             return super.toString() + " '" + titleView.text + "'"
