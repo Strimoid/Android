@@ -9,5 +9,16 @@ query EntriesQuery($cursor: String) {
         }
         uv
         dv
+        replies {
+            id
+            createdAt
+            text
+            user {
+                avatar
+                name
+            }
+            uv
+            dv
+        }
     }
 }
