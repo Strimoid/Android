@@ -5,6 +5,7 @@ query ContentsQuery($cursor: String) {
         title
         thumbnail
         description
+        url
         user {
             name
         }

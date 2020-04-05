@@ -1,16 +1,19 @@
 package pl.strm.android.ui.contents
 
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.cardview.widget.CardView
 import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.fragment_content.view.*
 import pl.strm.android.ContentsQuery.Content
+import pl.strm.android.ui.contents.Content as AppContent
 import pl.strm.android.R
 import pl.strm.android.ui.contents.ContentListAdapter.ViewHolder
 
@@ -40,9 +43,17 @@ class ContentListAdapter() : PagedListAdapter<Content, ViewHolder>(DiffCallback)
         } else {
             holder.descriptionView.text = item.description
         }
+
+        holder.cardView.setOnClickListener {
+            val intent = Intent(it.context.applicationContext, ContentActivity::class.java)
+            intent.putExtra("content", AppContent(item))
+
+            it.context.startActivity(intent)
+        }
     }
 
     inner class ViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
+        val cardView: CardView = view.card
         val titleView: TextView = view.title
         val descriptionView: TextView = view.description
         val thumbnailView: ImageView = view.thumbnail
