@@ -1,22 +1,18 @@
-package pl.strm.android.ui.entries
+package pl.strm.android.ui.entries.list
 
 import android.text.Html
-import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.paging.PagedListAdapter
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.RecyclerView
+import kotlinx.android.synthetic.main.fragment_entry.view.*
+import pl.strm.android.EntriesQuery
 import pl.strm.android.R
 
-import pl.strm.android.ui.entries.dummy.DummyContent.DummyItem
-
-import kotlinx.android.synthetic.main.fragment_entry.view.*
-import pl.strm.android.ContentsQuery
-import pl.strm.android.EntriesQuery
-
-class EntriesRecyclerViewAdapter(
-    private val values: ArrayList<EntriesQuery.Entry> = ArrayList()
-) : RecyclerView.Adapter<EntriesRecyclerViewAdapter.ViewHolder>() {
+class EntryListAdapter() : PagedListAdapter<EntriesQuery.Entry, EntryListAdapter.ViewHolder>(DiffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
@@ -25,17 +21,10 @@ class EntriesRecyclerViewAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val item = values[position]
+        val item: EntriesQuery.Entry = getItem(position) as EntriesQuery.Entry
         //holder.idView.text = item.id
         holder.authorView.text = item.user?.name
         holder.contentView.text = Html.fromHtml(item.text, Html.FROM_HTML_MODE_COMPACT)
-    }
-
-    override fun getItemCount(): Int = values.size
-
-    fun replace(newList: List<EntriesQuery.Entry>) {
-        values.clear()
-        values.addAll(newList)
     }
 
     inner class ViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
@@ -45,6 +34,24 @@ class EntriesRecyclerViewAdapter(
 
         override fun toString(): String {
             return super.toString() + " '" + contentView.text + "'"
+        }
+    }
+
+    companion object {
+        val DiffCallback = object : DiffUtil.ItemCallback<EntriesQuery.Entry>() {
+            override fun areItemsTheSame(
+                oldItem: EntriesQuery.Entry,
+                newItem: EntriesQuery.Entry
+            ): Boolean {
+                return oldItem.id == newItem.id
+            }
+
+            override fun areContentsTheSame(
+                oldItem: EntriesQuery.Entry,
+                newItem: EntriesQuery.Entry
+            ): Boolean {
+                return oldItem == newItem
+            }
         }
     }
 }

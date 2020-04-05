@@ -1,4 +1,4 @@
-package pl.strm.android.ui.contents
+package pl.strm.android.ui.contents.list
 
 import android.content.Intent
 import android.view.LayoutInflater
@@ -13,9 +13,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.fragment_content.view.*
 import pl.strm.android.ContentsQuery.Content
-import pl.strm.android.ui.contents.Content as AppContent
+import pl.strm.android.domain.Content as AppContent
 import pl.strm.android.R
-import pl.strm.android.ui.contents.ContentListAdapter.ViewHolder
+import pl.strm.android.ui.contents.ContentActivity
+import pl.strm.android.ui.contents.list.ContentListAdapter.ViewHolder
 
 class ContentListAdapter() : PagedListAdapter<Content, ViewHolder>(DiffCallback) {
 

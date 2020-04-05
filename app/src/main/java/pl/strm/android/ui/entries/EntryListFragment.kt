@@ -1,7 +1,6 @@
 package pl.strm.android.ui.entries
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -9,12 +8,12 @@ import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.apollographql.apollo.ApolloCall
-import com.apollographql.apollo.api.Response
-import com.apollographql.apollo.exception.ApolloException
-import pl.strm.android.EntriesQuery
+import androidx.lifecycle.Observer
+import androidx.paging.LivePagedListBuilder
+import androidx.paging.PagedList
 import pl.strm.android.R
-import pl.strm.android.graphql.Client
+import pl.strm.android.ui.entries.list.EntryListAdapter
+import pl.strm.android.ui.entries.list.EntryListDataSourceFactory
 
 class EntryListFragment : Fragment() {
 
@@ -33,7 +32,15 @@ class EntryListFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_entry_list, container, false)
-        val entriesAdapter = EntriesRecyclerViewAdapter()
+        val entriesAdapter = EntryListAdapter()
+
+        val factory = EntryListDataSourceFactory()
+        val config = PagedList.Config.Builder().setPageSize(10).build()
+        val contents = LivePagedListBuilder(factory, config).build()
+
+        contents.observe(viewLifecycleOwner, Observer() {
+            entriesAdapter.submitList(it)
+        })
 
         // Set the adapter
         if (view is RecyclerView) {
@@ -46,29 +53,7 @@ class EntryListFragment : Fragment() {
             }
         }
 
-        getEntries(entriesAdapter)
-
         return view
-    }
-
-    private fun getEntries(adapter: EntriesRecyclerViewAdapter) {
-        val query = EntriesQuery()
-
-        Client.apollo.query(query)
-            .enqueue(object : ApolloCall.Callback<EntriesQuery.Data>() {
-                override fun onFailure(e: ApolloException) {
-                    Log.e("GraphQL", e.message.orEmpty())
-                }
-
-                override fun onResponse(response: Response<EntriesQuery.Data>) {
-                    response.data()?.let {
-                        activity?.runOnUiThread {
-                            adapter.replace(it.entries as List<EntriesQuery.Entry>)
-                            adapter.notifyDataSetChanged()
-                        }
-                    }
-                }
-            })
     }
 
     companion object {

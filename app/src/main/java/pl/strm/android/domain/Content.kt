@@ -1,4 +1,4 @@
-package pl.strm.android.ui.contents
+package pl.strm.android.domain
 
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize

@@ -1,4 +1,4 @@
-package pl.strm.android.ui.contents
+package pl.strm.android.ui.contents.list
 
 import android.util.Log
 import androidx.paging.ItemKeyedDataSource
@@ -21,8 +21,6 @@ class ContentListDataSource : ItemKeyedDataSource<String, Content>() {
 
     override fun loadAfter(params: LoadParams<String>, callback: LoadCallback<Content>) {
         val query = ContentsQuery(Input.optional(params.key))
-
-        Log.i("GraphQL", params.key)
 
         Client.runQuery(query) {
             it.data()?.contents?.let {

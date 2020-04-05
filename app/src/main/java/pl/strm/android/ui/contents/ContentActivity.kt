@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_content.*
 import kotlinx.android.synthetic.main.content_content.*
 import pl.strm.android.R
+import pl.strm.android.domain.Content
 
 class ContentActivity : AppCompatActivity() {
 

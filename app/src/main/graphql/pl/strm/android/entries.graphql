@@ -1,6 +1,7 @@
-query EntriesQuery {
-    entries {
+query EntriesQuery($cursor: String) {
+    entries(cursor: $cursor) {
         id
+        createdAt
         text
         user {
             avatar
