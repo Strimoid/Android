@@ -5,15 +5,16 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.paging.PagedListAdapter
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.fragment_content.view.*
-import pl.strm.android.ContentsQuery
+import pl.strm.android.ContentsQuery.Content
 import pl.strm.android.R
+import pl.strm.android.ui.contents.ContentListAdapter.ViewHolder
 
-class ContentsRecyclerViewAdapter(
-    private val values: ArrayList<ContentsQuery.Content> = ArrayList()
-) : RecyclerView.Adapter<ContentsRecyclerViewAdapter.ViewHolder>() {
+class ContentListAdapter() : PagedListAdapter<Content, ViewHolder>(DiffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
@@ -22,9 +23,8 @@ class ContentsRecyclerViewAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val item = values[position]
+        val item = getItem(position) as Content
         holder.titleView.text = item.title
-
 
         if (item.thumbnail !== null) {
             Glide.with(holder.titleView)
@@ -42,13 +42,6 @@ class ContentsRecyclerViewAdapter(
         }
     }
 
-    override fun getItemCount(): Int = values.size
-
-    fun replace(newList: List<ContentsQuery.Content>) {
-        values.clear()
-        values.addAll(newList)
-    }
-
     inner class ViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
         val titleView: TextView = view.title
         val descriptionView: TextView = view.description
@@ -56,6 +49,18 @@ class ContentsRecyclerViewAdapter(
 
         override fun toString(): String {
             return super.toString() + " '" + titleView.text + "'"
+        }
+    }
+
+    companion object {
+        val DiffCallback = object : DiffUtil.ItemCallback<Content>() {
+            override fun areItemsTheSame(oldItem: Content, newItem: Content): Boolean {
+                return oldItem.id == newItem.id
+            }
+
+            override fun areContentsTheSame(oldItem: Content, newItem: Content): Boolean {
+                return oldItem == newItem
+            }
         }
     }
 }

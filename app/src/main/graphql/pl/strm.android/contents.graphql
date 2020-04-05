@@ -1,6 +1,7 @@
-query ContentsQuery {
-    contents {
+query ContentsQuery($cursor: String) {
+    contents(cursor: $cursor) {
         id
+        createdAt
         title
         thumbnail
         description

@@ -9,6 +9,9 @@ import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.Observer
+import androidx.paging.LivePagedListBuilder
+import androidx.paging.PagedList
 import com.apollographql.apollo.ApolloCall
 import com.apollographql.apollo.api.Response
 import com.apollographql.apollo.exception.ApolloException
@@ -34,9 +37,16 @@ class ContentListFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_content_list, container, false)
-        val contentsAdapter = ContentsRecyclerViewAdapter(ArrayList())
+        val contentsAdapter = ContentListAdapter()
 
-        // Set the adapter
+        val factory = ContentListDataSourceFactory()
+        val config = PagedList.Config.Builder().setPageSize(10).build()
+        val contents = LivePagedListBuilder(factory, config).build()
+
+        contents.observe(viewLifecycleOwner, Observer() {
+            contentsAdapter.submitList(it)
+        })
+
         if (view is RecyclerView) {
             with(view) {
                 layoutManager = when {
@@ -47,29 +57,7 @@ class ContentListFragment : Fragment() {
             }
         }
 
-        getContents(contentsAdapter)
-
         return view
-    }
-
-    private fun getContents(adapter: ContentsRecyclerViewAdapter) {
-        val query = ContentsQuery()
-
-        Client.apollo.query(query)
-            .enqueue(object : ApolloCall.Callback<ContentsQuery.Data>() {
-                override fun onFailure(e: ApolloException) {
-                    Log.e("GraphQL", e.message.orEmpty())
-                }
-
-                override fun onResponse(response: Response<ContentsQuery.Data>) {
-                    response.data()?.let {
-                        activity?.runOnUiThread {
-                            adapter.replace(it.contents as List<ContentsQuery.Content>)
-                            adapter.notifyDataSetChanged()
-                        }
-                    }
-                }
-            })
     }
 
     companion object {
